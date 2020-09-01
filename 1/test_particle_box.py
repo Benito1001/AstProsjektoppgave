@@ -7,7 +7,7 @@ import ast2000tools.constants as cn
 import matplotlib.pyplot as plt
 
 box = EngineBox(100000, cn.m_H2, 1e-6, 3e3)
-change_box = EngineBox(100000, cn.m_H2, 1e-6, 3e3, change_velocities=True)
+change_box = box # EngineBox(100000, cn.m_H2, 1e-6, 3e3, change_velocities=True)
 
 
 timesteps = 1000
@@ -55,7 +55,7 @@ for i in range(timesteps):
 	pressure[i] = box.atom_count*cn.k_B*vel_same_temps[i]
 
 	box.step(dt)
-	change_box.step(dt)
+	# change_box.step(dt)
 print(f"\ntime: {time.time() - start_time} s")
 
 """plot temperature"""
@@ -66,15 +66,15 @@ print(f"\ntime: {time.time() - start_time} s")
 # plt.legend()
 # plt.savefig("box_temp.png", dpi=200)
 
-"""plot pressure"""
-fig = plt.figure(figsize=(10, 10))
-plt.plot([times[0], times[-1]], [box.atom_count*cn.k_B*3000, box.atom_count*cn.k_B*3000], "r", label="expected pressure")
-plt.plot(times, pressure, label="pressure in the rocket motor over time")
-plt.legend()
-plt.savefig("box_pressure.png", dpi=200)
+# """plot pressure"""
+# fig = plt.figure(figsize=(10, 10))
+# plt.plot([times[0], times[-1]], [box.atom_count*cn.k_B*3000, box.atom_count*cn.k_B*3000], "r", label="expected pressure")
+# plt.plot(times, pressure, label="pressure in the rocket motor over time")
+# plt.legend()
+# plt.savefig("box_pressure.png", dpi=200)
 
 """plot position"""
-# fig = plt.figure(figsize=(10, 10))
+# fig = plt.figure(figsize=(6, 6))
 # plt.plot(posx0[0], posz0[0], "go", label="start")
 # sub_posx0 = []
 # sub_posz0 = []
@@ -98,4 +98,8 @@ plt.savefig("box_pressure.png", dpi=200)
 # plt.ylabel("z [m]")
 # plt.xlim(0, box.box_size)
 # plt.ylim(0, box.box_size)
+# for axticks in [plt.xticks, plt.yticks]:
+# 	locs, labels = axticks()
+# 	[label.set_text(loc) for loc, label in zip(locs, labels)]
+# 	axticks(locs, labels)
 # plt.savefig("box_position.png", dpi=200)

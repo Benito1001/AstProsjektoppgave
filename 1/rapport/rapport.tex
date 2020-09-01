@@ -56,7 +56,7 @@
 	tilfeldig genererte solsystemet:
 
 	\begin{table}[h]
-		\caption{Solsystemverdier}\label{table}
+		\caption{Solsystemverdier}\label{solartable}
 		\makebox[0.4\textwidth][c]{
 			\begin{tabular}{|c|c|c|c|c|}
 				\hline
@@ -94,10 +94,12 @@
 		P(v_x) = \sqrt{\frac{m}{2\pi k T}}e^{-\frac{1}{2}\frac{mv_x^2}{kT}}
 	$$
 	Hvor m er massen til partiklet, $T$ er temperaturen til partiklet og $k$ er
-	Boltzmann konstanten, ca. $1.38 \cdot 10^{-23}$ $\frac{\text{J}}{\text{K}}$. \
+	Boltzmann konstanten, ca. $1.38 \cdot 10^{-23}$ $\frac{\text{J}}{\text{K}}$.
 
 	Denne funksjonen beskriver en sannsynlighetstetthet, sjansen for at en hastighet
-	er i intervallet $[v_0,\ v_1]$ er integralet $\int\limits_{v_0}^{v_1} P(v_x)\ dv_x$. \
+	er i intervallet $[v_0,\ v_1]$ er integralet $\int\limits_{v_0}^{v_1} P(v_x)\ dv_x$.
+	Dette vil også si at $\int\limits_{-\infty}^{\infty} P(v_x)\ dv_x = 1$, ettersom
+	sjansen for at en hastighet er i intervallet $[-\infty,\ \infty]$ er 100 \%.
 
 	Maxvell-Boltzmann fordelingsfunksjonen er en normaldistrobusjon, en funksjon på formen:
 	$$
@@ -113,7 +115,28 @@
 	Hvor $\mu$ er x-verdien til toppunktet, og $\sigma$ sier noe om bredden til kurven.
 	$\mu$ kalles middelverdien, og $\sigma$ kalles standardavviket. For å få en
 	visuell forståelse av standardavviket kan man bruke FWHM, "Full width half maximum":
-	Forholdet mellom FWHM og standardavviket er $\sigma = \frac{\text{FWHM}}{2\sqrt{2\ln{2}}}$
+	Forholdet mellom FWHM og standardavviket er
+	$$\sigma = \frac{\text{FWHM}}{2\sqrt{2\ln{2}}}$$
+	Utldeningen av dette forholdet er i \ref{FWHM}.
+	\vspace{0.25cm}
+	En annen viktig sannsynlighetsfordeling er Maxvell-Boltzmanns fordelingsfunksjon
+	for absolutthastighet:
+	$$
+		P(v) = \left(\sqrt{\frac{m}{2\pi k T}}\right)^3 e^{-\frac{1}{2}\frac{mv^2}{kT}} 4\pi v^2
+	$$
+	Denne likner på Maxvell-Boltzmanns fordelingsfunksjon for hastighetskomponenter,
+	men på grunn av det siste leddet, $4\pi v^2$, er det ikke en normaldistrobusjon.
+	Den er likevel fortsatt en sannsynlighetsfordeling, $\int\limits_{0}^{\infty} P(v)\ dv = 1$.
+	Fra Maxvell-Boltzmanns fordelingsfunksjon kan man utlede noen viktige formler: \\
+	\\
+	Gjennomsnittshastigheten i en gass: \\
+	\ $\left<v\right> = \sqrt{\frac{8kT}{\pi m}}$ (\ref{avgSpeed}) \\
+	\\
+	Den ideelle gassloven: \\
+	\ $P = nkT$ (\ref{idealGass}) \\
+	\\
+	Gjennomsnittsenergien i en gass: \\
+	\ $\left<E\right> = \frac{3}{2}kT (sick ref)$
 
 	\vspace{0.5cm}
 
@@ -189,7 +212,7 @@
 
 
 \section{Method}
-  Først og fremst kan vi se på hvordan vi simulerer bevegelsen til gassmolekylene
+	Først og fremst kan vi se på hvordan vi simulerer bevegelsen til gassmolekylene
 	i motoren. Vi tenker oss at rakketdrivstoffet er ren H2-gass, og at motoren har
 	en temperatur på $3000$ Kelvin. For å gjøre simuleringen enklere antar vi at H2-gassen
 	er en ideell gass, altså at H2-molekylene ikke interagerer med hverandre, dette stemmer
@@ -230,15 +253,27 @@
 	$$t = \frac{s}{v} = \frac{10^{-6}\text{ m}}{10^{4}\text{ m/s}} = 10^{-10} \text{ s}$$
 	Vi ønsker at et raskt molekyl
 	skal bevege seg fra en side av boksen til en annen på N steg, så
-	tidsstegstørrelsen vi trenger er $\frac{10^{-10}}{N}$ s. Vi valgte N = 20 (Hvorfor?),
-	som betyr at vi bruke $\Delta t = 0.5 \cdot 10^{-11}$.
+	tidsstegstørrelsen vi trenger er $\frac{10^{-10}}{N}$ s. Vi valgte $N = 20$,
+	altså $\Delta t = 0.5 \cdot 10^{-11}$, basert
+	på en balanse mellom presisjon og simuleringshastighet. Når vi plottet bevegelsen
+	til et av molekylene med $N = 20$ så det slik ut:
+	\newpage
+	\begin{figure}
+		\centering
+		\caption{Bevegen til et hydrogenmolekyl}
+		\makebox[0.5\textwidth][c]{\includegraphics[scale=0.23]{../box_position-stripped}}
+	\end{figure}
+	Vi så at molekylet ikke kom for langt inn i veggen, og bestemte oss for å ikke
+	bruke mer tid på å finpusse tidsstegstørrelsen. Dette plottet viser også at
+	molekylet faller ut av boksen og et nytt molekyl kommer inn, som skal forklares
+	senere.
 
 	\vspace{0.5cm}
 
 	Videre må vi lage et hull i bunnen av boksen slik at molekylene slipper ut og
 	vi får en kraft som dytter raketten oppover. For å sjekke om et molekyl har kommet
 	ut av boksen, sjekker vi da om koordinatene ligger både innenfor hullet, og under boksen.
-  Man kan prøve seg litt fram med størrelsen på hullet slik at ikke for mye av gassen
+	Man kan prøve seg litt fram med størrelsen på hullet slik at ikke for mye av gassen
 	vi har tilgjengelig slipper ut for fort og slik at vi får en stor nok oppdriftskraft.
 	Når vi finner ut hvor mange partikler som har gått ut av boksen i et tidssteg
 	så kan man finne ut hvilken fart de hadde og dermed endringen i bevegelsesmengde
@@ -259,30 +294,119 @@
 	i bevegelsesmengde per tidssteg for hvert tidssteg kan vi også regne ut denne
 	kraften for hvert tidssteg og fra Newtons andre lov akselerasjonen oppover per
 	tidssteg. Hvis vi også da tar i betraktning gravitasjonen på raketten og drivstoffet
-	og hvor mye massen endres idet mer drivstoff slippes ut kan vi bruke Euler-Cromers
+	og hvor mye massen endres idet mer drivstoff slippes ut kan vi numerisk beregne
+	bevegelsen til raketten. Til dette brukte vi Euler-Cromers
 	metode til å regne ut hastighet og posisjon:
 	\begin{align*}
 		\vec{v}_{i+1} &= \vec{v}_i + \vec{a}_i\Delta t \\
 		\vec{r}_{i+1} &= \vec{r}_i + \vec{v}_{i+1}\Delta t
 	\end{align*}
-	Og da kan vi finne ut når raketten når unnslipningshastigheten som for den gitte planeten
-	med radius $r = 9.572\cdot10^6$m og masse $M = 1.82\cdot10^{25}$kg:
+	Målet er å skyte opp raketten, som vil si å få den til å gå så raskt at den når
+	unnslipningshastigheten, som er forklart i teoridelen.
+	Vi må først finne unnslipningshastigheten for planeten vår: \\
+	Vi har fra \ref{solartable} at planeten har radiue $r = 9.572\cdot10^6$ m og
+	masse $M = 1.82\cdot10^{25}$ kg, finner unnslipningshastigheten:
 	\begin{align*}
 		v &= \sqrt{\frac{2GM}{r}}\\
-		&= \sqrt{\frac{2\cdot 6.67\cdot10^{-11}\frac{\text{m}^3}{\text{kgs}^2}\cdot1.82\cdot10^{25}\text{kg}}{9.572\cdot10^6\text{m}}}\\
+		&= \sqrt{\frac{2\cdot 6.67\cdot10^{-11}\frac{\text{ m}^3}{\text{ kgs}^2}\cdot1.82\cdot10^{25}\text{ kg}}{9.572\cdot10^6\text{ m}}}\\
 		&= 15.93\text{ km/s}
 	\end{align*}
-	Vi må også ta hensyn til initialhastigheten til romskipet vårt. Ettersom vi er
-	på en roterende planet vil vi ha en hastighet som avhenger av rotasjonshastigheten
+	Vi definerer altså å skyte opp raketten som å gi den en hastighet større enn $15.93\text{ km/s}$.
+	Når vi skal skyte opp raketten må vi ta hensyn til initialhastigheten til romskipet vårt. Ettersom den er
+	på en roterende planet vil den ha en hastighet som avhenger av rotasjonshastigheten
 	til planeten, radiusen til planeten og hvor på planeten raketten er. På ekvator
 	er initialhastigheten størst, og på polene er initialhastigheten minst. Vi skyter
 	derfor raketten opp på et punkt på ekvator, sånn at vi trenger minst mulig ekstra
-	hastighet for å nå unnslipningshastigheten. Med verdiene til planeten får fra
+	hastighet for å nå unnslipningshastigheten. Med verdiene til planeten vår fra
 	tabell 1 har vi at rotasjonshastigheten er $\omega = 6.38\cdot10^{-5}\text{ s}^{-1}$.
-	Dette gir en initialhastighet (med rotasjonsretningen) $v = \omega \cdot 9572 \cdot 1000 = 611$ m/s
+	Dette gir en initialhastighet (i rotasjonsretningen) $v = \omega \cdot r=6.38\cdot 10^{-5}\text{ s}^{-1} \cdot9.572 \cdot 10^6\text{ m} = 611$ m/s. \\
+	Vi definerer startspunktet til romskipet som $(0, 0, r)$ hvor $r$ er radiusen til
+	planeten. Vi har altså definert x-aksen til å gå langs ekvator i rotasjonsretningen,
+	z-aksen til å gå rett oppover i radiell rettning, og z-aksen til å gå normalt på
+	x-aksen og z-aksen. Det vil si at initialhastigheten til rommskipet er i x-retning,
+	og kraften fra motoren er i z-retning. I en ekte rakettoppskytning vil raketten
+	bøye seg i rotasjonsretningen, men vi antar her at raketten er helt parallell med
+	z-aksen hele tiden, og at all akselerasjon foregår i z-retning. Dette er fordi at
+	vi ikke har lært hvordan en ekte rakettoppskytning fungerer.
 
 \section{Results}
 \section{Discussion}
 \section{Conclusion}
 
+\appendix
+\section{Utledning}
+	\subsection{Utleding av forholdet mellom FWHM og standardavviket}\label{FWHM}
+	Skal vise at
+	$$\sigma = \frac{\text{FWHM}}{2\sqrt{2\ln{2}}} \implies \text{FWHM} = 2\sqrt{2\ln{2}}\sigma$$
+	Toppunktet til en normalkurve er når $x=\mu$. "Half maximum" er derfor $\frac{P(\mu)}{2}$
+	(hvor P(x) er normalfunksjonen). "Half maximum" er altså:
+	$$
+	\frac{P(\mu)}{2} = \frac{1}{2}\frac{1}{\sqrt{2\pi}\sigma}e^{-\frac{1}{2}\left(\frac{\mu - \mu}{\sigma}\right)^2}
+	= \frac{1}{2\sqrt{2\pi}\sigma}
+	$$
+	\\
+	Trenger så å finne x-verdien hvor x="Half maximum", løser likningen $P(x) = \frac{P(\mu)}{2}$:
+	\begin{align*}
+		\frac{1}{\sqrt{2\pi}\sigma}e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2} &= \frac{1}{2\sqrt{2\pi}\sigma} \\
+		e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2} &= \frac{1}{2} \\
+		-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2 &= \ln{\frac{1}{2}} \\
+		\left(\frac{x-\mu}{\sigma}\right)^2 &= 2\ln{2} \\
+		\left(x - \mu\right)^2 &= 2\ln{2}\sigma^2 \\
+		x - \mu &= \pm\sigma\sqrt{2\ln{2}} \\
+		x &= \underline{\mu \pm \sigma\sqrt{2\ln{2}}} \\
+	\end{align*}
+
+	"Full width" er max(x) - min(x):
+	\begin{align*}
+		&\ \ \ \ \ \left(\mu + \sigma\sqrt{2\ln{2}}\right) - \left(\mu - \sigma\sqrt{2\ln{2}}\right) \\
+		&= \sigma\sqrt{2\ln{2}} + \sigma\sqrt{2\ln{2}} + \mu - \mu \\
+		&= \underline{2\sqrt{2\ln{2}}\sigma}
+	\end{align*}
+	\\
+	"Full width" for "Half maximum" er FWHM, altså er $\text{FWHM} = 2\sqrt{2\ln{2}}\sigma \ \ \square$
+
+	\subsection{Utleding av gjennomsnittshastigheten til en gass}\label{avgSpeed}
+	Skal vise at
+	$$\left<v\right> = \sqrt{\frac{8kT}{\pi m}}$$
+	Har at
+	$$\left<v\right> = \int\limits_0^{\infty}vP(v)\ dv \text{, } P(v) = \left(\sqrt{\frac{m}{2\pi k T}}\right)^3 e^{-\frac{1}{2}\frac{m v^2}{k T}}4\pi v^2$$
+	Løser integralet:
+	\begin{align*}
+		\left<v\right> &= \int_0^{\infty}v \left( \left(\sqrt{\frac{m}{2\pi k T}}\right)^3 e^{-\frac{1}{2}\frac{m v^2}{k T}}4\pi v^2 \right) dv \\
+		&\ \ \ \ \ \ u = v^2 \implies du = 2vdv \implies dv = \frac{du}{2v} \\
+		&= 4\pi \left(\sqrt{\frac{m}{2\pi k T}}\right)^3 \frac{1}{2} \int_0^{\infty} e^{-\frac{1}{2}\frac{m u}{k T}} u\ du \\
+		&= 4\pi \left(\sqrt{\frac{m}{2\pi k T}}\right)^3 \frac{1}{2}\int_0^{\infty} ue^{-Cu}\ du\ \text{, }\ C = \frac{1}{2}\frac{m}{k T} \\
+		&\ \ \ \ \ \ t = Cu \implies u = \frac{t}{C},\ dt = Cdu,\ du = \frac{dt}{C} \\
+		&= 4\pi \left(\sqrt{\frac{m}{2\pi k T}}\right)^3 \frac{1}{2} \frac{1}{C^2}\int_0^{\infty} te^{-t}\ dt \\
+		&= 4\pi \left(\sqrt{\frac{m}{2\pi k T}}\right)^3 \frac{1}{2} \frac{1}{\left(\frac{1}{2}\frac{m}{k T}\right)^2} \cdot 1 \\
+		&=\sqrt{\frac{8kT}{\pi m}} \ \ \square
+	\end{align*}
+
+	\subsection{Utledning av trykket til en ideell gass}\label{idealGass}
+	Skal vise at $$P=nkT$$ ut i fra integralet
+	$$
+	P=\frac{1}{3}\int_{0}^{\infty}pvn(p)dp
+	$$
+	Hvor $n(p)=nP(p)$ er antalltettheten
+	Løser integralet
+	\begin{align*}
+	  P&=\frac{1}{3}\int_{0}^{\infty}pvn(p)dp\\
+		P(v)&=(\frac{m}{2\pi kT})^{\frac{3}{2}}e^{-\frac{mv^2}{2kT}}4\pi v^2\\
+		p&=mv\\
+		P(p)&=(\frac{m}{2\pi kT})^{\frac{3}{2}}e^{-\frac{p^2}{2kTm}}4\pi\frac{p^2}{m^2}\\
+		P&=\frac{1}{3}\int_{0}^{\infty}pvn(p)dp\\
+		&=\frac{1}{3}n\int_{0}^{\infty}\frac{p^2}{m}(\frac{m}{2\pi kT})^{\frac{3}{2}}e^{-\frac{p^2}{2kTm}}4\pi\frac{p^2}{m^2}dp\\
+		&=\frac{4\pi}{3}n(\frac{m^3}{(2\pi kT)^3m^6})^{\frac{1}{2}}\int_{0}^{\infty}e^{-\frac{p^2}{2kTm}}p^4dp\\
+		u&=\frac{p^2}{2kTm}\\
+		\frac{du}{dp}&=\frac{p}{kTm}\\
+	  dp&=\frac{mkT}{p}du\\
+		p&=\sqrt{2mkTu}\\
+  \end{align*}
+	\newpage %% OBS! fjærn denne kanskje
+	\begin{align*}
+		&\frac{4\pi}{3}n(\frac{m^3}{(2\pi kT)^3m^6})^{\frac{1}{2}}\int_{0}^{\infty}e^{-\frac{p^2}{2kTm}}p^4dp\\
+		&=\frac{4\pi}{3}n(\frac{m^3}{(2\pi kT)^3m^6})^{\frac{1}{2}}mkT(2mkT)^{\frac{3}{2}}\int_{0}^{\infty}e^{-u}(u)^{\frac{3}{2}}dp\\
+		&=\frac{4\pi}{3}n(\frac{m^3}{(2\pi kT)^3m^6})^{\frac{1}{2}}mkT(2mkT)^{\frac{3}{2}}\frac{3}{4}\sqrt{\pi}\\
+		&=nkT
+	\end{align*}
 \end{document}

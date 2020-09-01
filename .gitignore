@@ -1,0 +1,11 @@
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.gz
+*.bib
+
+__pycache__
+
+.ipynb_checkpoints
